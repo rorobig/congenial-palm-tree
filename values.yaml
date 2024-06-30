@@ -1,0 +1,45 @@
+# values.yaml
+
+# Global settings for ArgoCD
+global:
+  image:
+    repository: quay.io/argoproj/argocd
+    
+# Server component configuration
+server:
+  # Enable the server component
+  enabled: true
+
+  # Ingress configuration for ArgoCD server
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: "nginx"  # Replace with your ingress class
+      cert-manager.io/issuer: "letsencrypt-prod"  # Replace with your ClusterIssuer name if using Cert Manager
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    hostname: "r3scluster.ddns.net"  # Replace with your domain
+    tls:
+      # - secretName: argocd-server-tls  # Name of the Kubernetes Secret to store the TLS certificate
+        hosts:
+          - r3scluster.ddns.net  # DNS name for the certificate (must match 'hosts' above)
+    ingressClassName: "nginx"
+    certificateSecret:
+    # -- Create argocd-server-tls secret
+      enabled: true
+      secretName: argocd-tls-secret
+      
+
+# RBAC configuration
+rbac:
+  create: true  # Whether to create RBAC resources
+
+# Redis component configuration
+redis:
+  enabled: true
+
+# RepoServer component configuration
+repoServer:
+  enabled: true
+
+# Optionally, you can configure other components and settings as needed
